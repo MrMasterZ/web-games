@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="WebContent"/>
+	<classpathentry kind="lib" path="C:/Users/Sergey/eclipse-workspace/gamecities/WebContent/main.js"/>
+	<classpathentry kind="lib" path="C:/Users/Sergey/eclipse-workspace/gamecities/WebContent/jquery-3.3.1.min.js"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.WebProject">
+		<attributes>
+			<attribute name="hide" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.baseBrowserLibrary"/>
+	<classpathentry kind="output" path=""/>
+</classpath>

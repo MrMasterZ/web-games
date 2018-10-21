@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <title> Игра "Города" </title>
+    <meta name="description" lang="ru" content="Игра Города">
+    <meta http-equiv="keywords" name="keywords" content="игра, города, java">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="robots" content="all">
+    <link rel="stylesheet" href="style.css">
+    <script src="jquery-3.3.1.min.js"></script>
+  </head>
+
+  <body>
+     <img id="cities-bg" src="http://localhost:8080/gamecities/icons/cities.PNG">
+
+ <!--   http://localhost:8080/gamecities/<div>Города<img id="home" src="icons/home.png"></div>-->
+<!-- Элементы игры -->
+    <input id="city-user" type="text" size="140" value="введите название города">                    <!-- текстовое поле, куда пользователь будет вводить имя города -->
+	<input id="city-robot" type="text" size="140">                                                                                                    <!-- текстовое поле, в которое будет введено компьютером имя города -->
+	
+	<!-- вывод ошибок (вначале скрыта, появляется только при возникновении ошибки) -->
+    <div id="error-format-city"><span id="red-select">Неверное имя города.</span><br>               <!-- вывод при не верном формате имени города (принимаются только слова, начинающиейся с русской буквы и состоящие только из русских букв (регистр не важен) и знаков дефис (-)) -->
+	Имя города допускает только русские буквы и дефис.</div>
+    <div id="error-repetition-city"><span id="red-select">Недопустимое имя города.</span><br>       <!-- вывод если это имя города уже использовалось (есть в textarea) -->
+	Такое имя города уже использовалось.</div>
+	<div id="error-rule-city"><span id="red-select">Недопустимое имя города.</span><br>             <!-- вывод если это имя города не допустимо правилами игры (должно начинаться с последней буквы соперника) -->
+	Недопустимо правилами игры: Ваше имя города должно начинаться с последней буквы слова соперника.<br>
+	Исключения: 1) если слово сопреника заканчивается на "ё", то Ваше должно начинаться на "е" или "ё"<br>
+	2) если слово сопреника заканчивается на "й", то Ваше должно начинаться на "и" или "й"<br>
+	3) если слово сопреника заканчивается на "ъ", "ы" или "ь", то Ваше должно начинаться на предпоследнюю букву слова соперника</div>
+	<div id="error-exist-city"><span id="red-select">Несуществующее имя города.</span><br>           <!-- вывод если такого города не существует (проверяется в БД) -->
+	Такого города не существует.</div>
+	
+	<div id="title-area">Уже введенные города:</div>                                                 <!-- Заголовок текстовой области -->
+    <textarea id="list-cities" name="list-cities" cols="80" rows="35" style="font-size: 18px;"> </textarea>                   <!-- Текстовая область, куда программа записывает уже введённые города -->
+    <input id="answer" name="answer" type="submit" value="Ответить">                                 <!-- Кнопка "Ответить" -->
+  	<input id="give-up" name="give-up" type="submit" value="Сдаться">                                <!-- Кнопка "Сдаться" -->
+    <div id="log"> Консоль выполнения запроса:</div>                                                 <!-- лог передачи запроса ajax серверу и обратно -->
+
+	<script src="main.js"></script>
+  </body>
+</html></html>

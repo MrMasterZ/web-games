@@ -1,0 +1,80 @@
+body {
+  background-color: #FFFFFF;
+  padding: 0;
+  margin: 0;
+}
+
+#cities-bg {
+  height: 10%;
+  margin: 0px 0 0 0px;
+  position:fixed;
+  width: 100%;
+  
+}
+
+#red-select {    	                               /* обычное выделение красным */
+  color: red;
+  font: normal 18px "Times New Roman";
+}
+
+/* сообщения об ошибках */
+#error-format-city,
+#error-repetition-city,
+#error-rule-city,
+#error-exist-city {                                                                   
+  margin: 160px 0 0 30px;
+  position:fixed;
+}
+
+#city-user {	   		                                /* поле куда игрок вводит название города */
+  background-color: #E0ECF8;
+  margin: 130px 0 0 30px;
+  position: fixed;
+}
+
+#city-robot {	   		                            /* поле куда компьютер вводит название города */
+  background-color: #E0ECF8;
+  margin: 280px 0 0 30px;
+  position: fixed;
+}
+
+#title-area {                                       /* "Уже введённые города" */
+  background-color: #FFFFFF;
+  color: #000000;
+  margin: 100px 0 0 920px;
+  position: fixed;
+}
+
+#list-cities {					        		    /* текстовая область введенных городов */
+  background-color: #E0ECF8;
+  margin: 130px 0 0 920px;
+  position: fixed;
+}
+
+#answer {								     		/* кнопка "Ответить" */
+  background-color: #E0ECF8;
+  margin: 380px 0 0 30px;
+  position: fixed;
+}
+
+ #give-up {								     		/* кнопка "Сдаться" */
+  background-color: #E0ECF8;
+  margin: 380px 0 0 790px;
+  position: fixed;
+}
+
+#answer:hover,
+#give-up:hover {								        /* кнопка "Ответить" */
+  background-color: #BDBDBD;
+  cursor: pointer;
+}
+
+#log {								     		    /* лог передачи запроса ajax серверу и обратно */
+  background-color: #E0ECF8;
+  border: 1px solid gray;
+  height: 110;
+  margin: 470px 0 0 30px;
+  padding: 10;
+  position: fixed;
+  width: 810;  
+}
