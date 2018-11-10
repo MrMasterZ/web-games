@@ -1,77 +1,84 @@
 package com.gamecities;
- 
+
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.*;
- 
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 public class GameCities extends HttpServlet {
-private static final long serialVersionUID = 1L;
-private static volatile List<String> citiesList = new ArrayList<>();                     // список для хранения уже названных имён городов (для дальнейшего восстановления сессии)
-	
-  public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    resp.setContentType("text/html;charset=utf-8");
-    PrintWriter pw = resp.getWriter();
-    pw.println("errorGet");
-  }
-   
-  public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	resp.setContentType("text/html;charset=utf-8");
-    PrintWriter pw = resp.getWriter();
-    
-    String cityUserRaw = req.getParameter("userCity");     // получили имя города от пользователя
-    String cityUser = new String (cityUserRaw.getBytes ("ISO-8859-1"), "utf8");
-    String replayServer;                                             // ответ сервера
-    if (cityUser.equals("clear")) {
-    	citiesList.clear();
-    	pw.println("clear");
-    }
-    else {
-    try {
-      Class.forName("org.postgresql.Driver").newInstance();
-      UserRequestDb userRequestDb = new UserRequestDb();
-      if (userRequestDb.cityExistsDb(cityUser)) {                    // если город введенный пользователем существует (проверка существования в БД)
-        userRequestDb.disconnectDb();
-        citiesList.add(cityUser);                                    // добавляем введенное пользователем имя города в список названных имён городов
+	private static final long serialVersionUID = 1L;
+	private static volatile List<String> citiesList = new ArrayList<>(); // СЃРїРёСЃРѕРє РґР»СЏ С…СЂР°РЅРµРЅРёСЏ СѓР¶Рµ РЅР°Р·РІР°РЅРЅС‹С… РёРјС‘РЅ РіРѕСЂРѕРґРѕРІ (РґР»СЏ РґР°Р»СЊРЅРµР№С€РµРіРѕ
+																			// РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ СЃРµСЃСЃРёРё)
 
-        char[] cityUserChar = cityUser.substring(cityUser.length()-2, cityUser.length()).toUpperCase().toCharArray();  // берём 2 последние буквы имя города введенного пользователем, переводим в верхний регистр и записываем в массив символов  cityUserChar
-        char endChar = cityUserChar[cityUserChar.length-1];                                                            // последний символ введенного пользователем имени города
-        String startName;                                                                                              // формируем startName, который будет передан в запрос (по какой первой букве будем искать имя города) (особые случаи: ё, й, ъ, ь, ы)
-        if (endChar == 'Ё') startName = "(name LIKE 'Е%' OR name LIKE 'Ё%')";
-        else if (endChar == 'Й') startName = "(name LIKE 'И%' OR name LIKE 'Й%')";
-        else if (endChar == 'Ъ' || endChar == 'Ы' || endChar == 'Ь') startName = "name LIKE '" + cityUserChar[cityUserChar.length-2] + "%'";  // в этих случаях ищем имя города не по последней, а по предпоследней букве введенного пользователем имени города
-        else startName = "name LIKE '" + endChar + "%'";
+	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.setContentType("text/html;charset=utf-8");
+		PrintWriter pw = resp.getWriter();
+		pw.println("errorGet");
+	}
 
-        String exceptionNames = "(";                                                                                   // формируем часть запроса SQL (список уже названных имён городов, которые не надо искать в БД)
-        for (String city: citiesList) exceptionNames = exceptionNames + "'" + city + "',";
-        exceptionNames = exceptionNames.substring(0, exceptionNames.length() - 1) +  ")";
+	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.setContentType("text/html;charset=utf-8");
+		PrintWriter pw = resp.getWriter();
 
-        RobotRequestDb robotRequestDb = new RobotRequestDb();
-        replayServer = robotRequestDb.robotCityNameDb(startName, exceptionNames);                                      // ищем город для ответа пользователю
-        if ( replayServer != null) citiesList.add(replayServer);
-        else replayServer = "errorGiveUp";
-        robotRequestDb.disconnectDb();
-      }
-      else {
-        replayServer ="errorNotExists";
-        userRequestDb.disconnectDb();
-      }
-      pw.println(replayServer);
-    }
-    catch (SQLException e) {
-      replayServer ="errorBd";
-	  pw.println(replayServer);
-    }
-	catch (Exception e) {
-      replayServer ="errorOther";
-    }
-  }
-  }
+		String cityUserRaw = req.getParameter("userCity"); // РїРѕР»СѓС‡РёР»Рё РёРјСЏ РіРѕСЂРѕРґР° РѕС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+		String cityUser = new String(cityUserRaw.getBytes("ISO-8859-1"), "utf8");
+		String replayServer; // РѕС‚РІРµС‚ СЃРµСЂРІРµСЂР°
+		if (cityUser.equals("clear")) {
+			citiesList.clear();
+			pw.println("clear");
+		} else {
+			try {
+				Class.forName("org.postgresql.Driver").newInstance();
+				UserRequestDb userRequestDb = new UserRequestDb();
+				if (userRequestDb.cityExistsDb(cityUser)) { // РµСЃР»Рё РіРѕСЂРѕРґ РІРІРµРґРµРЅРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј СЃСѓС‰РµСЃС‚РІСѓРµС‚ (РїСЂРѕРІРµСЂРєР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёСЏ РІ Р‘Р”)
+					userRequestDb.disconnectDb();
+					citiesList.add(cityUser); // РґРѕР±Р°РІР»СЏРµРј РІРІРµРґРµРЅРЅРѕРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј РёРјСЏ РіРѕСЂРѕРґР° РІ СЃРїРёСЃРѕРє РЅР°Р·РІР°РЅРЅС‹С… РёРјС‘РЅ РіРѕСЂРѕРґРѕРІ
+
+					char[] cityUserChar = cityUser.substring(cityUser.length() - 2, cityUser.length()).toUpperCase().toCharArray(); // Р±РµСЂС‘Рј 2 РїРѕСЃР»РµРґРЅРёРµ Р±СѓРєРІС‹ РёРјСЏ РіРѕСЂРѕРґР° РІРІРµРґРµРЅРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј, РїРµСЂРµРІРѕРґРёРј РІ
+																																	// РІРµСЂС…РЅРёР№ СЂРµРіРёСЃС‚СЂ Рё Р·Р°РїРёСЃС‹РІР°РµРј РІ РјР°СЃСЃРёРІ СЃРёРјРІРѕР»РѕРІ cityUserChar
+					char endChar = cityUserChar[cityUserChar.length - 1]; // РїРѕСЃР»РµРґРЅРёР№ СЃРёРјРІРѕР» РІРІРµРґРµРЅРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј РёРјРµРЅРё РіРѕСЂРѕРґР°
+					String startName; // С„РѕСЂРјРёСЂСѓРµРј startName, РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµС‚ РїРµСЂРµРґР°РЅ РІ Р·Р°РїСЂРѕСЃ (РїРѕ РєР°РєРѕР№ РїРµСЂРІРѕР№ Р±СѓРєРІРµ
+										// Р±СѓРґРµРј РёСЃРєР°С‚СЊ РёРјСЏ РіРѕСЂРѕРґР°) (РѕСЃРѕР±С‹Рµ СЃР»СѓС‡Р°Рё: С‘, Р№, СЉ, СЊ, С‹)
+					if (endChar == 'РЃ')
+						startName = "(name LIKE 'Р•%' OR name LIKE 'РЃ%')";
+					else if (endChar == 'Р™')
+						startName = "(name LIKE 'Р%' OR name LIKE 'Р™%')";
+					else if (endChar == 'РЄ' || endChar == 'Р«' || endChar == 'Р¬')
+						startName = "name LIKE '" + cityUserChar[cityUserChar.length - 2] + "%'"; // РІ СЌС‚РёС… СЃР»СѓС‡Р°СЏС… РёС‰РµРј РёРјСЏ РіРѕСЂРѕРґР° РЅРµ РїРѕ РїРѕСЃР»РµРґРЅРµР№, Р° РїРѕ РїСЂРµРґРїРѕСЃР»РµРґРЅРµР№ Р±СѓРєРІРµ
+																									// РІРІРµРґРµРЅРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј РёРјРµРЅРё РіРѕСЂРѕРґР°
+					else
+						startName = "name LIKE '" + endChar + "%'";
+
+					String exceptionNames = "("; // С„РѕСЂРјРёСЂСѓРµРј С‡Р°СЃС‚СЊ Р·Р°РїСЂРѕСЃР° SQL (СЃРїРёСЃРѕРє СѓР¶Рµ РЅР°Р·РІР°РЅРЅС‹С… РёРјС‘РЅ РіРѕСЂРѕРґРѕРІ, РєРѕС‚РѕСЂС‹Рµ РЅРµ
+													// РЅР°РґРѕ РёСЃРєР°С‚СЊ РІ Р‘Р”)
+					for (String city : citiesList)
+						exceptionNames = exceptionNames + "'" + city + "',";
+					exceptionNames = exceptionNames.substring(0, exceptionNames.length() - 1) + ")";
+
+					RobotRequestDb robotRequestDb = new RobotRequestDb();
+					replayServer = robotRequestDb.robotCityNameDb(startName, exceptionNames); // РёС‰РµРј РіРѕСЂРѕРґ РґР»СЏ РѕС‚РІРµС‚Р° РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
+					if (replayServer != null)
+						citiesList.add(replayServer);
+					else
+						replayServer = "errorGiveUp";
+					robotRequestDb.disconnectDb();
+				} else {
+					replayServer = "errorNotExists";
+					userRequestDb.disconnectDb();
+				}
+				pw.println(replayServer);
+			} catch (SQLException e) {
+				replayServer = "errorBd";
+				pw.println(replayServer);
+			} catch (Exception e) {
+				replayServer = "errorOther";
+			}
+		}
+	}
 }

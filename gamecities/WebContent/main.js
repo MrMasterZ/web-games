@@ -14,7 +14,7 @@ document.getElementById('list-cities').setAttribute('disabled', 'true');
 
 // прячем вывод ошибок
 hideError();                
-
+alert("new555");
 // строка ввода города в фокусе
  $('#city-user').bind('focus', function city1(event) {
    var city = document.getElementById('city-user');
